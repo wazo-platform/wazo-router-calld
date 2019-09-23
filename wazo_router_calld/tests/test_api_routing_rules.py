@@ -108,13 +108,14 @@ def test_update_routing_rule(app=None, client=None):
     session.commit()
     #
     response = client.put(
-        "/routing_rules/1", json={
+        "/routing_rules/1",
+        json={
             'prefix': '40',
             'carrier_trunk_id': 2,
             'ipbx_id': 1,
             'did_regex': r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
             'route_type': "pstn",
-        }
+        },
     )
     assert response.status_code == 200
     assert response.json() == {
@@ -130,12 +131,13 @@ def test_update_routing_rule(app=None, client=None):
 @get_app_and_client
 def test_update_routing_rule_not_found(app=None, client=None):
     response = client.put(
-        "/routing_rules/1", json={
+        "/routing_rules/1",
+        json={
             'prefix': '40',
             'carrier_trunk_id': 2,
             'ipbx_id': 1,
             'did_regex': r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
             'route_type': "pstn",
-        }
+        },
     )
     assert response.status_code == 404
