@@ -1,18 +1,20 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class CarrierTrunk(BaseModel):
     id: int
-    carrier_id: int = None
-    name: str = None
-    sip_proxy: str = None
+    carrier_id: int
+    name: str
+    sip_proxy: str
     registered: bool = False
-    auth_username: str = None
-    auth_password: str = None
-    auth_ha1: str = None
-    realm: str = None
-    registrar_proxy: str = None
-    from_domain: str = None
+    auth_username: Optional[str] = None
+    auth_password: Optional[str] = None
+    auth_ha1: Optional[str] = None
+    realm: Optional[str] = None
+    registrar_proxy: Optional[str] = None
+    from_domain: Optional[str] = None
     expire_seconds: int = 3600
     retry_seconds: int = 30
 
@@ -21,29 +23,29 @@ class CarrierTrunk(BaseModel):
 
 
 class CarrierTrunkCreate(BaseModel):
-    carrier_id: int = None
-    name: str = None
-    sip_proxy: str = None
+    carrier_id: int
+    name: str
+    sip_proxy: str
     registered: bool = False
-    auth_username: str = None
-    auth_password: str = None
-    auth_ha1: str = None
-    realm: str = None
-    registrar_proxy: str = None
-    from_domain: str = None
+    auth_username: Optional[str] = None
+    auth_password: Optional[str] = None
+    auth_ha1: Optional[str] = None
+    realm: Optional[str] = None
+    registrar_proxy: Optional[str] = None
+    from_domain: Optional[str] = None
     expire_seconds: int = 3600
     retry_seconds: int = 30
 
 
 class CarrierTrunkUpdate(BaseModel):
-    name: str = None
-    sip_proxy: str = None
+    name: str
+    sip_proxy: str
     registered: bool = False
-    auth_username: str = None
-    auth_password: str = None
-    auth_ha1: str = None
-    realm: str = None
-    registrar_proxy: str = None
-    from_domain: str = None
+    auth_username: Optional[str] = None
+    auth_password: Optional[str] = None
+    auth_ha1: Optional[str] = None
+    realm: Optional[str] = None
+    registrar_proxy: Optional[str] = None
+    from_domain: Optional[str] = None
     expire_seconds: int = 3600
     retry_seconds: int = 30

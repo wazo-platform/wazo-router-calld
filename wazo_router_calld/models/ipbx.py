@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -9,6 +11,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .tenant import Tenant  # noqa
+    from .domain import Domain  # noqa
 
 
 class IPBX(Base):
@@ -24,7 +30,7 @@ class IPBX(Base):
     tenant = relationship("Tenant")
     domain_id = Column(Integer, nullable=False)
     domain = relationship("Domain")
-    customer = Column(Integer, nullable=False)
+    customer = Column(Integer, nullable=True)
     ip_fqdn = Column(String, nullable=False)
     port = Column(Integer, nullable=False, default=5060)
     registered = Column(Boolean, default=False, nullable=False)

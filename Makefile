@@ -15,9 +15,13 @@ dist:
 clean:
 	rm -fr build dist *.egg-info
 
+.PHONY: black
+black:
+	black --skip-string-normalization wazo_router_calld
+
 .PHONY: flake8
 flake8:
-	flake8 --ignore=E501,E402,W503 canyan
+	flake8 --ignore=E501,E402,W503 wazo_router_calld
 
 .PHONY: pylint
 pylint:

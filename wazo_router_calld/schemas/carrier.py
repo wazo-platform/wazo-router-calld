@@ -1,20 +1,22 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class Carrier(BaseModel):
     id: int
-    name: str = None
-    tenant_id: int = None
+    name: str
+    tenant_id: int
 
     class Config:
         orm_mode = True
 
 
 class CarrierCreate(BaseModel):
-    name: str = None
-    tenant_id: int = None
+    name: str
+    tenant_id: int
 
 
 class CarrierUpdate(BaseModel):
-    name: str = None
-    tenant_id: int = None
+    name: Optional[str] = None
+    tenant_id: int

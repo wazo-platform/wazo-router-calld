@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
 from wazo_router_calld.models.did import DID
@@ -8,7 +10,7 @@ def get_did(db: Session, did_id: int):
     return db.query(DID).filter(DID.id == did_id).first()
 
 
-def get_did_by_regex(db: Session, regex: str):
+def get_did_by_regex(db: Session, regex: Optional[str]):
     return db.query(DID).filter(DID.did_regex == regex).first()
 
 

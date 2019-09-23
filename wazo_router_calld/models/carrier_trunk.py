@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .carrier import Carrier  # noqa
 
 
 class CarrierTrunk(Base):
