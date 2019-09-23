@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .tenant import Tenant  # noqa
 
 
 class RoutingGroup(Base):

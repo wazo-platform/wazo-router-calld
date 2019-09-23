@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import (
     Column,
     Integer,
@@ -9,6 +11,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .tenant import Tenant  # noqa
+    from .domain import Domain  # noqa
 
 
 class IPBX(Base):

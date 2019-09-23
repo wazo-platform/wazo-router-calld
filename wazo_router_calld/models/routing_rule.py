@@ -1,7 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
 from .base import Base
+
+if TYPE_CHECKING:
+    from .carrier_trunk import CarrierTrunk  # noqa
+    from .ipbx import IPBX  # noqa
 
 
 class RoutingRule(Base):
