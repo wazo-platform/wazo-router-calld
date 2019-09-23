@@ -7,13 +7,20 @@ from fastapi import FastAPI
 
 
 class ConsulService(object):
-
     def __init__(self, consul_uri: str):
         uri = urlparse(consul_uri)
         self._consul_uri = consul_uri
         self._consul = Consul(host=uri.hostname, port=uri.port)
 
-    def register(self, service_id: str, name: str, address: str = None, port: int = None, tags: Tuple[str] = None, check: dict = None):
+    def register(
+        self,
+        service_id: str,
+        name: str,
+        address: str = None,
+        port: int = None,
+        tags: Tuple[str] = None,
+        check: dict = None,
+    ):
         self._consul.agent.service.register(
             name,
             service_id=service_id,
@@ -56,20 +63,17 @@ def setup_consul(app: FastAPI, config: dict):
             'wazo-router-calld',
             address=config['host'] if config['host'] != '0.0.0.0' else None,
             port=config['port'],
-            tags=(
-                'wazo-router-calld',
-                'wazo-router',
-                'wazo-api',
-                'wazo',
-            ),
+            tags=('wazo-router-calld', 'wazo-router', 'wazo-api', 'wazo'),
             check={
                 "id": "api",
                 "name": "HTTP API on port 5000",
                 "http": "http://%(host)s:%(port)d/status" % config,
                 "method": "GET",
                 "interval": "10s",
-                "timeout": "1s"
-            } if (config['host'] and config['port']) else None,
+                "timeout": "1s",
+            }
+            if (config['host'] and config['port'])
+            else None,
         )
 
     @app.on_event("shutdown")

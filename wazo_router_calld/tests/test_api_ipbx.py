@@ -6,6 +6,7 @@ def test_create_ipbx(app=None, client=None):
     from wazo_router_calld.database import SessionLocal
     from wazo_router_calld.models.domain import Domain
     from wazo_router_calld.models.tenant import Tenant
+
     tenant = Tenant(name='fabio')
     domain = Domain(domain='testdomain.com', tenant=tenant)
     session = SessionLocal(bind=app.engine)
@@ -24,7 +25,7 @@ def test_create_ipbx(app=None, client=None):
             "username": "user",
             "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
             "sha1b": "f10e2821bbbea527ea02200352313bc059445190",
-        }
+        },
     )
     assert response.status_code == 200
     assert response.json() == {
@@ -47,6 +48,7 @@ def test_get_ipbx(app=None, client=None):
     from wazo_router_calld.models.domain import Domain
     from wazo_router_calld.models.tenant import Tenant
     from wazo_router_calld.models.ipbx import IPBX
+
     tenant = Tenant(name='fabio')
     domain = Domain(domain='testdomain.com', tenant=tenant)
     ipbx = IPBX(
@@ -91,6 +93,7 @@ def test_update_ipbx(app=None, client=None):
     from wazo_router_calld.models.ipbx import IPBX
     from wazo_router_calld.models.domain import Domain
     from wazo_router_calld.models.tenant import Tenant
+
     tenant = Tenant(name='fabio')
     domain = Domain(domain='testdomain.com', tenant=tenant)
     ipbx = IPBX(
@@ -114,8 +117,8 @@ def test_update_ipbx(app=None, client=None):
             'tenant_id': 2,
             'domain_id': 3,
             'username': 'otheruser',
-            'registered': False
-        }
+            'registered': False,
+        },
     )
     assert response.status_code == 200
     assert response.json() == {
@@ -134,10 +137,5 @@ def test_update_ipbx(app=None, client=None):
 
 @get_app_and_client
 def test_update_ipbx_not_found(app=None, client=None):
-    response = client.put(
-        "/ipbx/1",
-        json={
-            "ip_fqdn": "mypbx3.com",
-        }
-    )
+    response = client.put("/ipbx/1", json={"ip_fqdn": "mypbx3.com"})
     assert response.status_code == 404

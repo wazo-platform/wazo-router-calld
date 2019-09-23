@@ -16,7 +16,9 @@ def get_db(request: Request):
 
 def setup_database(app: FastAPI, config: dict):
     database_uri = config['database_uri']
-    connect_args = {"check_same_thread": False} if database_uri.startswith('sqlite:') else {}
+    connect_args = (
+        {"check_same_thread": False} if database_uri.startswith('sqlite:') else {}
+    )
     app.engine = engine = create_engine(database_uri, connect_args=connect_args)
     Base.metadata.create_all(bind=engine)
 

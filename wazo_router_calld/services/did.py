@@ -24,7 +24,7 @@ def create_did(db: Session, did: schema.DIDCreate):
     db_did = DID(
         did_regex=did.did_regex,
         carrier_trunk_id=did.carrier_trunk_id,
-        tenant_id=did.tenant_id
+        tenant_id=did.tenant_id,
     )
     db.add(db_did)
     db.commit()
@@ -35,9 +35,17 @@ def create_did(db: Session, did: schema.DIDCreate):
 def update_did(db: Session, did_id: int, did: schema.DIDUpdate):
     db_did = db.query(DID).filter(DID.id == did_id).first()
     if db_did is not None:
-        db_did.did_regex = did.did_regex if did.did_regex is not None else db_did.did_regex
-        db_did.carrier_trunk_id = did.carrier_trunk_id if did.carrier_trunk_id is not None else db_did.carrier_trunk_id
-        db_did.tenant_id = did.tenant_id if did.tenant_id is not None else db_did.tenant_id
+        db_did.did_regex = (
+            did.did_regex if did.did_regex is not None else db_did.did_regex
+        )
+        db_did.carrier_trunk_id = (
+            did.carrier_trunk_id
+            if did.carrier_trunk_id is not None
+            else db_did.carrier_trunk_id
+        )
+        db_did.tenant_id = (
+            did.tenant_id if did.tenant_id is not None else db_did.tenant_id
+        )
         db.commit()
         db.refresh(db_did)
     return db_did

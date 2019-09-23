@@ -7,6 +7,7 @@ def test_kamailio_routing_with_single_ipbx(app=None, client=None):
     from wazo_router_calld.models.tenant import Tenant
     from wazo_router_calld.models.domain import Domain
     from wazo_router_calld.models.ipbx import IPBX
+
     session = SessionLocal(bind=app.engine)
     tenant = Tenant(name='fabio')
     domain = Domain(domain='testdomain.com', tenant=tenant)
@@ -18,7 +19,7 @@ def test_kamailio_routing_with_single_ipbx(app=None, client=None):
         username='user',
         sha1='da39a3ee5e6b4b0d3255bfef95601890afd80709',
         sha1b='f10e2821bbbea527ea02200352313bc059445190',
-        tenant=tenant
+        tenant=tenant,
     )
     session.add_all([tenant, domain, ipbx])
     session.commit()
@@ -43,7 +44,7 @@ def test_kamailio_routing_with_single_ipbx(app=None, client=None):
             "to_uri": request_to_uri,
             "to_name": request_to_name,
             "to_tag": request_to_tag,
-        }
+        },
     )
     assert response.status_code == 200
     assert response.json() == {
@@ -55,21 +56,15 @@ def test_kamailio_routing_with_single_ipbx(app=None, client=None):
                 "path": "",
                 "socket": "",
                 "headers": {
-                    "from": {
-                        "display": request_from_name,
-                        "uri": request_from_uri,
-                    },
-                    "to": {
-                        "display": request_to_name,
-                        "uri": request_to_uri,
-                    },
-                    "extra": ""
+                    "from": {"display": request_from_name, "uri": request_from_uri},
+                    "to": {"display": request_to_name, "uri": request_to_uri},
+                    "extra": "",
                 },
                 "branch_flags": 8,
                 "fr_timer": 5000,
-                "fr_inv_timer": 30000
+                "fr_inv_timer": 30000,
             }
-        ]
+        ],
     }
 
 
@@ -79,6 +74,7 @@ def test_kamailio_routing_with_no_matching_ipbx(app=None, client=None):
     from wazo_router_calld.models.tenant import Tenant
     from wazo_router_calld.models.domain import Domain
     from wazo_router_calld.models.ipbx import IPBX
+
     session = SessionLocal(bind=app.engine)
     tenant = Tenant(name='fabio')
     domain = Domain(domain='testdomain.com', tenant=tenant)
@@ -90,7 +86,7 @@ def test_kamailio_routing_with_no_matching_ipbx(app=None, client=None):
         username='user',
         sha1='da39a3ee5e6b4b0d3255bfef95601890afd80709',
         sha1b='f10e2821bbbea527ea02200352313bc059445190',
-        tenant=tenant
+        tenant=tenant,
     )
     session.add_all([tenant, domain, ipbx])
     session.commit()
@@ -115,11 +111,7 @@ def test_kamailio_routing_with_no_matching_ipbx(app=None, client=None):
             "to_uri": request_to_uri,
             "to_name": request_to_name,
             "to_tag": request_to_tag,
-        }
+        },
     )
     assert response.status_code == 200
-    assert response.json() == {
-        "version": "1.0",
-        "routing": "serial",
-        "routes": [],
-    }
+    assert response.json() == {"version": "1.0", "routing": "serial", "routes": []}

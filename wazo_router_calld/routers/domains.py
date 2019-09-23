@@ -34,7 +34,9 @@ def read_domain(domain_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/domains/{domain_id}", response_model=schema.Domain)
-def update_domain(domain_id: int, domain: schema.DomainUpdate, db: Session = Depends(get_db)):
+def update_domain(
+    domain_id: int, domain: schema.DomainUpdate, db: Session = Depends(get_db)
+):
     db_domain = service.update_domain(db, domain=domain, domain_id=domain_id)
     if db_domain is None:
         raise HTTPException(status_code=404, detail="Domain not found")
