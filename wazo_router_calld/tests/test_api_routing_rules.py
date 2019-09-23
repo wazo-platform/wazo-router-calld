@@ -9,7 +9,7 @@ def test_create_routing_rule(app=None, client=None):
             "prefix": "39",
             "carrier_trunk_id": 1,
             "ipbx_id": 1,
-            "did_regex": "^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
+            "did_regex": r"^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
             "route_type": "pstn",
         },
     )
@@ -19,7 +19,7 @@ def test_create_routing_rule(app=None, client=None):
         "prefix": "39",
         "carrier_trunk_id": 1,
         "ipbx_id": 1,
-        "did_regex": "^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
+        "did_regex": r"^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
         "route_type": "pstn",
     }
 
@@ -35,7 +35,7 @@ def test_get_routing_rule(app=None, client=None):
             prefix="39",
             carrier_trunk_id=1,
             ipbx_id=1,
-            did_regex='^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
+            did_regex=r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
             route_type="pstn",
         )
     )
@@ -48,7 +48,7 @@ def test_get_routing_rule(app=None, client=None):
         "prefix": "39",
         "carrier_trunk_id": 1,
         "ipbx_id": 1,
-        "did_regex": "^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
+        "did_regex": r"^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
         "route_type": "pstn",
     }
 
@@ -70,7 +70,7 @@ def test_get_routing_rules(app=None, client=None):
             prefix="39",
             carrier_trunk_id=1,
             ipbx_id=1,
-            did_regex='^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
+            did_regex=r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
             route_type="pstn",
         )
     )
@@ -84,7 +84,7 @@ def test_get_routing_rules(app=None, client=None):
             "prefix": "39",
             "carrier_trunk_id": 1,
             "ipbx_id": 1,
-            "did_regex": "^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
+            "did_regex": r"^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
             "route_type": "pstn",
         }
     ]
@@ -101,7 +101,7 @@ def test_update_routing_rule(app=None, client=None):
             prefix="39",
             carrier_trunk_id=1,
             ipbx_id=1,
-            did_regex='^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
+            did_regex=r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
             route_type="pstn",
         )
     )
@@ -116,7 +116,7 @@ def test_update_routing_rule(app=None, client=None):
         "prefix": "40",
         "carrier_trunk_id": 2,
         "ipbx_id": 1,
-        "did_regex": "^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
+        "did_regex": r"^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
         "route_type": "pstn",
     }
 
