@@ -89,5 +89,7 @@ def test_update_domain(app=None, client=None):
 
 @get_app_and_client
 def test_update_domain_not_found(app=None, client=None):
-    response = client.put("/domains/1", json={'domain': 'thirdone.com'})
+    response = client.put(
+        "/domains/1", json={'domain': 'otherdomain.com', 'tenant_id': 2}
+    )
     assert response.status_code == 404

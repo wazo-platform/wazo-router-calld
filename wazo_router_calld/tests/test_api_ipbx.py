@@ -137,5 +137,14 @@ def test_update_ipbx(app=None, client=None):
 
 @get_app_and_client
 def test_update_ipbx_not_found(app=None, client=None):
-    response = client.put("/ipbx/1", json={"ip_fqdn": "mypbx3.com"})
+    response = client.put(
+        "/ipbx/1",
+        json={
+            'ip_fqdn': 'mypbx2.com',
+            'tenant_id': 2,
+            'domain_id': 3,
+            'username': 'otheruser',
+            'registered': False,
+        },
+    )
     assert response.status_code == 404

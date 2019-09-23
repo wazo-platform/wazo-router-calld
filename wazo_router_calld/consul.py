@@ -1,8 +1,10 @@
+from typing import Optional
+
 from urllib.parse import urlparse
 from uuid import uuid4
 from typing import Tuple
 
-from consul import Consul
+from consul import Consul  # type: ignore
 from fastapi import FastAPI
 from pydantic import NoneBytes
 
@@ -17,10 +19,10 @@ class ConsulService(object):
         self,
         service_id: str,
         name: str,
-        address: str = None,
-        port: int = None,
+        address: Optional[str] = None,
+        port: Optional[int] = None,
         tags: Tuple[str] = None,
-        check: dict = None,
+        check: Optional[dict] = None,
     ):
         self._consul.agent.service.register(
             name,
@@ -43,10 +45,11 @@ class ConsulService(object):
 
 
 def setup_consul(app: FastAPI, config: dict):
-    app.consul = ConsulService(config['consul_uri'])
+    consul = ConsulService(config['consul_uri'])
+    setattr(app, 'consul', consul)
 
     # configuration settings from consul
-    database_uri = app.consul.get('wazo-router-calld.database_uri')
+    database_uri = consul.get('wazo-router-calld.database_uri')
     if database_uri is not None:
         config['database_uri'] = database_uri.decode('utf-8')
 
@@ -59,7 +62,8 @@ def setup_consul(app: FastAPI, config: dict):
 
     @app.on_event("startup")
     def startup_event():
-        app.consul.register(
+        consul = getattr(app, 'consul')
+        consul.register(
             service_id,
             'wazo-router-calld',
             address=config['host'] if config['host'] != '0.0.0.0' else None,
@@ -79,6 +83,7 @@ def setup_consul(app: FastAPI, config: dict):
 
     @app.on_event("shutdown")
     def shutdown_event():
-        app.consul.deregister(service_id)
+        consul = getattr(app, 'consul')
+        consul.deregister(service_id)
 
     return app

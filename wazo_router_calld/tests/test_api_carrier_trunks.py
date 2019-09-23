@@ -166,8 +166,17 @@ def test_update_carrier_trunk(app=None, client=None):
         "/carrier_trunks/1",
         json={
             'name': 'updated_carrier_trunk1',
+            "carrier_id": 1,
+            "sip_proxy": "proxy.somedomain.com",
+            "registered": True,
             'auth_username': 'username2',
             'auth_password': 'password2',
+            "auth_ha1": "ha1pass",
+            "realm": "somerealm.com",
+            "registrar_proxy": "registrar-proxy.com",
+            "from_domain": "gw.somedomain.com",
+            "expire_seconds": 1800,
+            "retry_seconds": 10,
         },
     )
     assert response.status_code == 200
@@ -178,17 +187,33 @@ def test_update_carrier_trunk(app=None, client=None):
         'sip_proxy': 'proxy.somedomain.com',
         'auth_username': 'username2',
         'auth_password': 'password2',
-        'auth_ha1': None,
-        'expire_seconds': 3600,
-        'retry_seconds': 30,
-        'from_domain': None,
-        'realm': None,
-        'registered': False,
-        'registrar_proxy': None,
+        'auth_ha1': "ha1pass",
+        'expire_seconds': 1800,
+        'retry_seconds': 10,
+        'from_domain': "gw.somedomain.com",
+        'realm': "somerealm.com",
+        'registered': True,
+        'registrar_proxy': "registrar-proxy.com",
     }
 
 
 @get_app_and_client
 def test_update_carrier_trunk_not_found(app=None, client=None):
-    response = client.put("/carrier_trunks/1", json={'name': 'updated_carrier_trunk1'})
+    response = client.put(
+        "/carrier_trunks/1",
+        json={
+            'name': 'updated_carrier_trunk1',
+            "carrier_id": 1,
+            "sip_proxy": "proxy.somedomain.com",
+            "registered": True,
+            'auth_username': 'username2',
+            'auth_password': 'password2',
+            "auth_ha1": "ha1pass",
+            "realm": "somerealm.com",
+            "registrar_proxy": "registrar-proxy.com",
+            "from_domain": "gw.somedomain.com",
+            "expire_seconds": 1800,
+            "retry_seconds": 10,
+        },
+    )
     assert response.status_code == 404

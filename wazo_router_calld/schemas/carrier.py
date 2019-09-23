@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, NoneStr
+from pydantic import BaseModel
 
 
 class Carrier(BaseModel):
@@ -18,5 +18,5 @@ class CarrierCreate(BaseModel):
 
 
 class CarrierUpdate(BaseModel):
-    name: NoneStr = None
-    tenant_id: Optional[int] = None
+    name: Optional[str] = None
+    tenant_id: int
