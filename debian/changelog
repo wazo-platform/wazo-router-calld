@@ -1,0 +1,5 @@
+wazo-router-calld (15.18~1) wazo-dev-buster; urgency=medium
+
+  * Initial package
+
+ -- Fabio Tranchitella <ftranchitella@wazo.io>  Thu, 19 Sep 2019 13:48:00 +0200

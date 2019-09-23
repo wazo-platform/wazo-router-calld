@@ -1,0 +1,3 @@
+[run]
+source = wazo_router_calld
+omit = *tests*
