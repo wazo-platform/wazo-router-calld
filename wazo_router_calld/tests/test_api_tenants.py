@@ -73,3 +73,23 @@ def test_update_tenant(app=None, client=None):
 def test_update_tenant_not_found(app=None, client=None):
     response = client.put("/tenants/1", json={'name': 'alex'})
     assert response.status_code == 404
+
+
+@get_app_and_client
+def test_delete_tenant(app=None, client=None):
+    from wazo_router_calld.database import SessionLocal
+    from wazo_router_calld.models.tenant import Tenant
+
+    session = SessionLocal(bind=app.engine)
+    session.add(Tenant(name='fabio'))
+    session.commit()
+    #
+    response = client.delete("/tenants/1")
+    assert response.status_code == 200
+    assert response.json() == {'id': 1, 'name': 'fabio'}
+
+
+@get_app_and_client
+def test_delete_tenant_not_found(app=None, client=None):
+    response = client.delete("/tenants/1")
+    assert response.status_code == 404

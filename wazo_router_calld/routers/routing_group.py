@@ -44,3 +44,16 @@ def update_routing_group(
     if db_routing_group is None:
         raise HTTPException(status_code=404, detail="RoutingGroup not found")
     return db_routing_group
+
+
+@router.delete("/routing_groups/{routing_group_id}", response_model=schema.RoutingGroup)
+def delete_routing_group(
+    routing_group_id: int,
+    db: Session = Depends(get_db),
+):
+    db_routing_group = service.delete_routing_group(
+        db, routing_group_id=routing_group_id
+    )
+    if db_routing_group is None:
+        raise HTTPException(status_code=404, detail="RoutingGroup not found")
+    return db_routing_group

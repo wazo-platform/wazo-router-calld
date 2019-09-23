@@ -91,3 +91,26 @@ def test_update_domain(app=None, client=None):
 def test_update_domain_not_found(app=None, client=None):
     response = client.put("/domains/1", json={'domain': 'thirdone.com'})
     assert response.status_code == 404
+
+
+@get_app_and_client
+def test_delete_domain(app=None, client=None):
+    from wazo_router_calld.database import SessionLocal
+    from wazo_router_calld.models.domain import Domain
+    from wazo_router_calld.models.tenant import Tenant
+
+    session = SessionLocal(bind=app.engine)
+    tenant = Tenant(name='test')
+    domain = Domain(domain='testdomain.com', tenant=tenant)
+    session.add_all([domain, tenant])
+    session.commit()
+    #
+    response = client.delete("/domains/1")
+    assert response.status_code == 200
+    assert response.json() == {'id': 1, 'domain': 'testdomain.com', 'tenant_id': 1}
+
+
+@get_app_and_client
+def test_delete_domain_not_found(app=None, client=None):
+    response = client.delete("/domains/1")
+    assert response.status_code == 404

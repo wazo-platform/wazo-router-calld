@@ -75,3 +75,23 @@ def test_update_carrier(app=None, client=None):
 def test_update_carrier_not_found(app=None, client=None):
     response = client.put("/carriers/1", json={'name': 'updated_carrier'})
     assert response.status_code == 404
+
+
+@get_app_and_client
+def test_delete_carrier(app=None, client=None):
+    from wazo_router_calld.database import SessionLocal
+    from wazo_router_calld.models.carrier import Carrier
+
+    session = SessionLocal(bind=app.engine)
+    session.add(Carrier(name='carrier1', tenant_id=1))
+    session.commit()
+    #
+    response = client.delete("/carriers/1")
+    assert response.status_code == 200
+    assert response.json() == {'id': 1, 'name': 'carrier1', 'tenant_id': 1}
+
+
+@get_app_and_client
+def test_delete_carrier_not_found(app=None, client=None):
+    response = client.delete("/carriers/1")
+    assert response.status_code == 404

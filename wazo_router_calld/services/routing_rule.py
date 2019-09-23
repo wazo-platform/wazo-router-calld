@@ -1,18 +1,20 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from wazo_router_calld.models.routing_rule import RoutingRule
 from wazo_router_calld.schemas import routing_rule as schema
 
 
-def get_routing_rule(db: Session, routing_rule_id: int):
+def get_routing_rule(db: Session, routing_rule_id: int) -> RoutingRule:
     return db.query(RoutingRule).filter(RoutingRule.id == routing_rule_id).first()
 
 
-def get_routing_rules(db: Session, skip: int = 0, limit: int = 100):
+def get_routing_rules(db: Session, skip: int = 0, limit: int = 100) -> List[RoutingRule]:
     return db.query(RoutingRule).offset(skip).limit(limit).all()
 
 
-def create_routing_rule(db: Session, routing_rule: schema.RoutingRuleCreate):
+def create_routing_rule(db: Session, routing_rule: schema.RoutingRuleCreate) -> RoutingRule:
     db_routing_rule = RoutingRule(
         prefix=routing_rule.prefix,
         carrier_trunk_id=routing_rule.carrier_trunk_id,
@@ -28,7 +30,7 @@ def create_routing_rule(db: Session, routing_rule: schema.RoutingRuleCreate):
 
 def update_routing_rule(
     db: Session, routing_rule_id: int, routing_rule: schema.RoutingRuleUpdate
-):
+) -> RoutingRule:
     db_routing_rule = (
         db.query(RoutingRule).filter(RoutingRule.id == routing_rule_id).first()
     )
@@ -60,4 +62,14 @@ def update_routing_rule(
         )
         db.commit()
         db.refresh(db_routing_rule)
+    return db_routing_rule
+
+
+def delete_routing_rule(db: Session, routing_rule_id: int) -> RoutingRule:
+    db_routing_rule = (
+        db.query(RoutingRule).filter(RoutingRule.id == routing_rule_id).first()
+    )
+    if db_routing_rule is not None:
+        db.delete(db_routing_rule)
+        db.commit()
     return db_routing_rule
