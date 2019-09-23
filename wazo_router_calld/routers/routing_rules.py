@@ -33,7 +33,7 @@ def read_routing_rule(routing_rule_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/routing_rules/{routing_rule_id}", response_model=schema.RoutingRule)
-def read_routing_rule(
+def update_routing_rule(
     routing_rule_id: int,
     routing_rule: schema.RoutingRuleUpdate,
     db: Session = Depends(get_db),
