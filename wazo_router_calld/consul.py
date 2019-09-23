@@ -4,6 +4,7 @@ from typing import Tuple
 
 from consul import Consul
 from fastapi import FastAPI
+from pydantic import NoneBytes
 
 
 class ConsulService(object):
@@ -33,7 +34,7 @@ class ConsulService(object):
     def deregister(self, service_id: str):
         self._consul.agent.service.deregister(service_id)
 
-    def get(self, key: str) -> str:
+    def get(self, key: str) -> NoneBytes:
         index, data = self._consul.kv.get(key)
         return data['Value'] if data else None
 
