@@ -6,9 +6,7 @@ from .base import Base
 
 class Domain(Base):
     __tablename__ = "domains"
-    __table_args__ = (
-        UniqueConstraint('tenant_id', 'id'),
-    )
+    __table_args__ = (UniqueConstraint('tenant_id', 'id'),)
 
     id = Column(Integer, primary_key=True, index=True)
     domain = Column(String(64), unique=True, index=True)

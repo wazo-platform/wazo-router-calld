@@ -34,7 +34,9 @@ def read_tenant(tenant_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/tenants/{tenant_id}", response_model=schema.Tenant)
-def update_tenant(tenant_id: int, tenant: schema.TenantUpdate, db: Session = Depends(get_db)):
+def update_tenant(
+    tenant_id: int, tenant: schema.TenantUpdate, db: Session = Depends(get_db)
+):
     db_tenant = service.update_tenant(db, tenant_id=tenant_id, tenant=tenant)
     if db_tenant is None:
         raise HTTPException(status_code=404, detail="Tenant not found")

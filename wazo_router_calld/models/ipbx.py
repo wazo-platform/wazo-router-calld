@@ -1,4 +1,11 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint, Boolean
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    ForeignKeyConstraint,
+    Boolean,
+)
 from sqlalchemy.orm import relationship
 
 from .base import Base
@@ -7,7 +14,9 @@ from .base import Base
 class IPBX(Base):
     __tablename__ = "ipbx"
     __table_args__ = (
-        ForeignKeyConstraint(['tenant_id', 'domain_id'], ['domains.tenant_id', 'domains.id']),
+        ForeignKeyConstraint(
+            ['tenant_id', 'domain_id'], ['domains.tenant_id', 'domains.id']
+        ),
     )
 
     id = Column(Integer, primary_key=True, index=True)

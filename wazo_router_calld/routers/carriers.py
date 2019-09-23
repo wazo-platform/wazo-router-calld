@@ -34,7 +34,9 @@ def read_carrier(carrier_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/carriers/{carrier_id}", response_model=schema.Carrier)
-def update_carrier(carrier_id: int, carrier: schema.CarrierUpdate, db: Session = Depends(get_db)):
+def update_carrier(
+    carrier_id: int, carrier: schema.CarrierUpdate, db: Session = Depends(get_db)
+):
     db_carrier = service.update_carrier(db, carrier=carrier, carrier_id=carrier_id)
     if db_carrier is None:
         raise HTTPException(status_code=404, detail="Carrier not found")

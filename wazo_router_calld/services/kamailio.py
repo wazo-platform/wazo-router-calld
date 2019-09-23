@@ -13,34 +13,28 @@ def routing(db: Session, request: schema.RoutingRequest) -> dict:
     _, address = parseaddr(request.to_uri)
     _, domain_name = address.rsplit('@', 1)
     # get all the ipbxs linked to that domain
-    ipbxs = db.query(IPBX)\
-        .join(Domain)\
-        .filter(Domain.domain == domain_name)\
+    ipbxs = (
+        db.query(IPBX)
+        .join(Domain)
+        .filter(Domain.domain == domain_name)
         .order_by(IPBX.id)
+    )
     # build a route for each ipbx
     for ipbx in ipbxs:
-        routes.append({
-            "uri": "sip:%s:%s" % (ipbx.ip_fqdn, ipbx.port),
-            "path": "",
-            "socket": "",
-            "headers": {
-                "from": {
-                    "display": request.from_name,
-                    "uri": request.from_uri,
+        routes.append(
+            {
+                "uri": "sip:%s:%s" % (ipbx.ip_fqdn, ipbx.port),
+                "path": "",
+                "socket": "",
+                "headers": {
+                    "from": {"display": request.from_name, "uri": request.from_uri},
+                    "to": {"display": request.to_name, "uri": request.to_uri},
+                    "extra": "",
                 },
-                "to": {
-                    "display": request.to_name,
-                    "uri": request.to_uri,
-                },
-                "extra": ""
-            },
-            "branch_flags": 8,
-            "fr_timer": 5000,
-            "fr_inv_timer": 30000
-        })
+                "branch_flags": 8,
+                "fr_timer": 5000,
+                "fr_inv_timer": 30000,
+            }
+        )
     # return the JSON document, compatible with the rtjson Kamailio module form
-    return {
-        "version": "1.0",
-        "routing": "serial",
-        "routes": routes,
-    }
+    return {"version": "1.0", "routing": "serial", "routes": routes}

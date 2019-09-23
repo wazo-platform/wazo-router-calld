@@ -14,4 +14,5 @@ def get_app_and_client(f):
             app = get_app(config)
             client = TestClient(app)
             return f(*args, app=app, client=client, **kw)
+
     return wrapper

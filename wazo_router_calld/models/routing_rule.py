@@ -15,4 +15,3 @@ class RoutingRule(Base):
     ipbx = relationship('IPBX')
     did_regex = Column(Text, nullable=True)
     route_type = Column(String(10), nullable=False, default='pstn')
-

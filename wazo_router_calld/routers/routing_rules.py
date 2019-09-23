@@ -12,7 +12,9 @@ router = APIRouter()
 
 
 @router.post("/routing_rules/", response_model=schema.RoutingRule)
-def create_routing_rule(routing_rule: schema.RoutingRuleCreate, db: Session = Depends(get_db)):
+def create_routing_rule(
+    routing_rule: schema.RoutingRuleCreate, db: Session = Depends(get_db)
+):
     return service.create_routing_rule(db=db, routing_rule=routing_rule)
 
 
@@ -31,8 +33,14 @@ def read_routing_rule(routing_rule_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/routing_rules/{routing_rule_id}", response_model=schema.RoutingRule)
-def read_routing_rule(routing_rule_id: int, routing_rule: schema.RoutingRuleUpdate, db: Session = Depends(get_db)):
-    db_routing_rule = service.update_routing_rule(db, routing_rule_id=routing_rule_id, routing_rule=routing_rule)
+def read_routing_rule(
+    routing_rule_id: int,
+    routing_rule: schema.RoutingRuleUpdate,
+    db: Session = Depends(get_db),
+):
+    db_routing_rule = service.update_routing_rule(
+        db, routing_rule_id=routing_rule_id, routing_rule=routing_rule
+    )
     if db_routing_rule is None:
         raise HTTPException(status_code=404, detail="RoutingRule not found")
     return db_routing_rule

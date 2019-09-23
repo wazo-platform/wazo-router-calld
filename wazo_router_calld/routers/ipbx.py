@@ -31,7 +31,9 @@ def read_ipbx(ipbx_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/ipbx/{ipbx_id}", response_model=schema.IPBX)
-def update_carrier(ipbx_id: int, ipbx: schema.IPBXUpdate, db: Session = Depends(get_db)):
+def update_carrier(
+    ipbx_id: int, ipbx: schema.IPBXUpdate, db: Session = Depends(get_db)
+):
     db_ipbx = service.update_ipbx(db, ipbx=ipbx, ipbx_id=ipbx_id)
     if db_ipbx is None:
         raise HTTPException(status_code=404, detail="IPBX not found")
