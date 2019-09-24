@@ -44,9 +44,7 @@ def update_tenant(
 
 
 @router.delete("/tenants/{tenant_id}", response_model=schema.Tenant)
-def delete_tenant(
-    tenant_id: int, db: Session = Depends(get_db)
-):
+def delete_tenant(tenant_id: int, db: Session = Depends(get_db)):
     db_tenant = service.delete_tenant(db, tenant_id=tenant_id)
     if db_tenant is None:
         raise HTTPException(status_code=404, detail="Tenant not found")

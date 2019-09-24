@@ -38,7 +38,9 @@ def create_carrier(db: Session, carrier: schema.CarrierCreate) -> Carrier:
     return db_carrier
 
 
-def update_carrier(db: Session, carrier_id: int, carrier: schema.CarrierUpdate) -> Carrier:
+def update_carrier(
+    db: Session, carrier_id: int, carrier: schema.CarrierUpdate
+) -> Carrier:
     db_carrier = db.query(Carrier).filter(Carrier.id == carrier_id).first()
     if db_carrier is not None:
         db_carrier.name = carrier.name if carrier.name is not None else db_carrier.name

@@ -18,7 +18,9 @@ def get_ipbxs(db: Session, skip: int = 0, limit: int = 100) -> List[IPBX]:
     return db.query(IPBX).offset(skip).limit(limit).all()
 
 
-def get_ipbxs_by_tenant(db: Session, tenant: int, skip: int = 0, limit: int = 100) -> List[IPBX]:
+def get_ipbxs_by_tenant(
+    db: Session, tenant: int, skip: int = 0, limit: int = 100
+) -> List[IPBX]:
     return db.query(IPBX).filter(IPBX.tenant == tenant).offset(skip).limit(limit).all()
 
 

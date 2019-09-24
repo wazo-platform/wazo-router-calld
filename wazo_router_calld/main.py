@@ -1,5 +1,7 @@
+from typing import Optional
+
 import click
-import uvicorn
+import uvicorn  # type: ignore
 
 from .app import get_app
 
@@ -37,10 +39,10 @@ from .app import get_app
     "--debug", is_flag=True, default=False, help="Enable debug mode.", hidden=True
 )
 def main(
-    host: str = None,
-    port: int = None,
-    consul_uri: str = None,
-    database_uri: str = None,
+    host: Optional[str] = None,
+    port: Optional[int] = None,
+    consul_uri: Optional[str] = None,
+    database_uri: Optional[str] = None,
     debug: bool = False,
 ):
     config = dict(

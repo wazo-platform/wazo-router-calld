@@ -10,11 +10,15 @@ def get_routing_group(db: Session, routing_group_id: int) -> RoutingGroup:
     return db.query(RoutingGroup).filter(RoutingGroup.id == routing_group_id).first()
 
 
-def get_routing_groups(db: Session, skip: int = 0, limit: int = 100) -> List[RoutingGroup]:
+def get_routing_groups(
+    db: Session, skip: int = 0, limit: int = 100
+) -> List[RoutingGroup]:
     return db.query(RoutingGroup).offset(skip).limit(limit).all()
 
 
-def create_routing_group(db: Session, routing_group: schema.RoutingGroupCreate) -> RoutingGroup:
+def create_routing_group(
+    db: Session, routing_group: schema.RoutingGroupCreate
+) -> RoutingGroup:
     db_routing_group = RoutingGroup(
         routing_rule=routing_group.routing_rule, tenant_id=routing_group.tenant_id
     )
@@ -46,9 +50,7 @@ def update_routing_group(
     return db_routing_group
 
 
-def delete_routing_group(
-    db: Session, routing_group_id: int,
-) -> RoutingGroup:
+def delete_routing_group(db: Session, routing_group_id: int) -> RoutingGroup:
     db_routing_group = (
         db.query(RoutingGroup).filter(RoutingGroup.id == routing_group_id).first()
     )

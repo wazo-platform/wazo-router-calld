@@ -10,11 +10,15 @@ def get_routing_rule(db: Session, routing_rule_id: int) -> RoutingRule:
     return db.query(RoutingRule).filter(RoutingRule.id == routing_rule_id).first()
 
 
-def get_routing_rules(db: Session, skip: int = 0, limit: int = 100) -> List[RoutingRule]:
+def get_routing_rules(
+    db: Session, skip: int = 0, limit: int = 100
+) -> List[RoutingRule]:
     return db.query(RoutingRule).offset(skip).limit(limit).all()
 
 
-def create_routing_rule(db: Session, routing_rule: schema.RoutingRuleCreate) -> RoutingRule:
+def create_routing_rule(
+    db: Session, routing_rule: schema.RoutingRuleCreate
+) -> RoutingRule:
     db_routing_rule = RoutingRule(
         prefix=routing_rule.prefix,
         carrier_trunk_id=routing_rule.carrier_trunk_id,

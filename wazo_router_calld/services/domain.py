@@ -18,7 +18,9 @@ def get_domains(db: Session, skip: int = 0, limit: int = 100) -> List[Domain]:
     return db.query(Domain).offset(skip).limit(limit).all()
 
 
-def get_domains_by_tenant(db: Session, tenant_id: int, skip: int = 0, limit: int = 100) -> List[Domain]:
+def get_domains_by_tenant(
+    db: Session, tenant_id: int, skip: int = 0, limit: int = 100
+) -> List[Domain]:
     return (
         db.query(Domain)
         .filter(Domain.tenant_id == tenant_id)

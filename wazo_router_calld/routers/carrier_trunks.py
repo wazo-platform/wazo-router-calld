@@ -52,10 +52,7 @@ def update_carrier_trunk(
 
 
 @router.delete("/carrier_trunks/{carrier_trunk_id}", response_model=schema.CarrierTrunk)
-def delete_carrier_trunk(
-    carrier_trunk_id: int,
-    db: Session = Depends(get_db),
-):
+def delete_carrier_trunk(carrier_trunk_id: int, db: Session = Depends(get_db)):
     db_carrier_trunk = service.delete_carrier_trunk(
         db, carrier_trunk_id=carrier_trunk_id
     )

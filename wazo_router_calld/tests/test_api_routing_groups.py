@@ -58,7 +58,7 @@ def test_update_routing_group(app=None, client=None):
 
 @get_app_and_client
 def test_update_routing_group_not_found(app=None, client=None):
-    response = client.put("/routing_groups/1", json={'name': 'updated_carrier'})
+    response = client.put("/routing_groups/1", json={'routing_rule': 2, 'tenant_id': 2})
     assert response.status_code == 404
 
 

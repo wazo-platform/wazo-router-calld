@@ -73,7 +73,9 @@ def test_update_carrier(app=None, client=None):
 
 @get_app_and_client
 def test_update_carrier_not_found(app=None, client=None):
-    response = client.put("/carriers/1", json={'name': 'updated_carrier'})
+    response = client.put(
+        "/carriers/1", json={'name': 'updated_carrier', 'tenant_id': 2}
+    )
     assert response.status_code == 404
 
 

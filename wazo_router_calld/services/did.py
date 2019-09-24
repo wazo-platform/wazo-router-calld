@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -10,7 +10,7 @@ def get_did(db: Session, did_id: int) -> DID:
     return db.query(DID).filter(DID.id == did_id).first()
 
 
-def get_did_by_regex(db: Session, regex: str) -> DID:
+def get_did_by_regex(db: Session, regex: Optional[str]) -> DID:
     return db.query(DID).filter(DID.did_regex == regex).first()
 
 
@@ -18,7 +18,9 @@ def get_dids(db: Session, skip: int = 0, limit: int = 100) -> List[DID]:
     return db.query(DID).offset(skip).limit(limit).all()
 
 
-def get_dids_by_tenant_id(db: Session, tenant: int, skip: int = 0, limit: int = 100) -> List[DID]:
+def get_dids_by_tenant_id(
+    db: Session, tenant: int, skip: int = 0, limit: int = 100
+) -> List[DID]:
     return db.query(DID).filter(DID.tenant_id == tenant).offset(skip).limit(limit).all()
 
 

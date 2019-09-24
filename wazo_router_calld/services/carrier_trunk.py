@@ -14,7 +14,9 @@ def get_carrier_trunk_by_name(db: Session, name: str) -> CarrierTrunk:
     return db.query(CarrierTrunk).filter(CarrierTrunk.name == name).first()
 
 
-def get_carrier_trunks(db: Session, skip: int = 0, limit: int = 100) -> List[CarrierTrunk]:
+def get_carrier_trunks(
+    db: Session, skip: int = 0, limit: int = 100
+) -> List[CarrierTrunk]:
     return db.query(CarrierTrunk).offset(skip).limit(limit).all()
 
 
@@ -30,7 +32,9 @@ def get_carrier_trunks_by_carrier(
     )
 
 
-def create_carrier_trunk(db: Session, carrier_trunk: schema.CarrierTrunkCreate) -> CarrierTrunk:
+def create_carrier_trunk(
+    db: Session, carrier_trunk: schema.CarrierTrunkCreate
+) -> CarrierTrunk:
     db_carrier_trunk = CarrierTrunk(
         carrier_id=carrier_trunk.carrier_id,
         name=carrier_trunk.name,
@@ -118,9 +122,7 @@ def update_carrier_trunk(
     return db_carrier_trunk
 
 
-def delete_carrier_trunk(
-    db: Session, carrier_trunk_id: int,
-) -> CarrierTrunk:
+def delete_carrier_trunk(db: Session, carrier_trunk_id: int) -> CarrierTrunk:
     db_carrier_trunk = (
         db.query(CarrierTrunk).filter(CarrierTrunk.id == carrier_trunk_id).first()
     )
