@@ -1,26 +1,30 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from wazo_router_calld.models.ipbx import IPBX
 from wazo_router_calld.schemas import ipbx as schema
 
 
-def get_ipbx(db: Session, ipbx_id: int):
+def get_ipbx(db: Session, ipbx_id: int) -> IPBX:
     return db.query(IPBX).filter(IPBX.id == ipbx_id).first()
 
 
-def get_ipbx_by_ip_fqdn(db: Session, ip_fqdn: str):
+def get_ipbx_by_ip_fqdn(db: Session, ip_fqdn: str) -> IPBX:
     return db.query(IPBX).filter(IPBX.ip_fqdn == ip_fqdn).first()
 
 
-def get_ipbxs(db: Session, skip: int = 0, limit: int = 100):
+def get_ipbxs(db: Session, skip: int = 0, limit: int = 100) -> List[IPBX]:
     return db.query(IPBX).offset(skip).limit(limit).all()
 
 
-def get_ipbxs_by_tenant(db: Session, tenant: int, skip: int = 0, limit: int = 100):
+def get_ipbxs_by_tenant(
+    db: Session, tenant: int, skip: int = 0, limit: int = 100
+) -> List[IPBX]:
     return db.query(IPBX).filter(IPBX.tenant == tenant).offset(skip).limit(limit).all()
 
 
-def create_ipbx(db: Session, ipbx: schema.IPBXCreate):
+def create_ipbx(db: Session, ipbx: schema.IPBXCreate) -> IPBX:
     db_ipbx = IPBX(
         tenant_id=ipbx.tenant_id,
         domain_id=ipbx.domain_id,
@@ -38,7 +42,7 @@ def create_ipbx(db: Session, ipbx: schema.IPBXCreate):
     return db_ipbx
 
 
-def update_ipbx(db: Session, ipbx_id: int, ipbx: schema.IPBXUpdate):
+def update_ipbx(db: Session, ipbx_id: int, ipbx: schema.IPBXUpdate) -> IPBX:
     db_ipbx = db.query(IPBX).filter(IPBX.id == ipbx_id).first()
     if db_ipbx is not None:
         db_ipbx.tenant_id = (
@@ -62,4 +66,12 @@ def update_ipbx(db: Session, ipbx_id: int, ipbx: schema.IPBXUpdate):
         db_ipbx.sha1b = ipbx.sha1b if ipbx.sha1b is not None else db_ipbx.sha1b
         db.commit()
         db.refresh(db_ipbx)
+    return db_ipbx
+
+
+def delete_ipbx(db: Session, ipbx_id: int) -> IPBX:
+    db_ipbx = db.query(IPBX).filter(IPBX.id == ipbx_id).first()
+    if db_ipbx is not None:
+        db.delete(db_ipbx)
+        db.commit()
     return db_ipbx

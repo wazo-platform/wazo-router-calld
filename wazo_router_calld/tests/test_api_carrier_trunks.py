@@ -217,3 +217,45 @@ def test_update_carrier_trunk_not_found(app=None, client=None):
         },
     )
     assert response.status_code == 404
+
+
+@get_app_and_client
+def test_delete_carrier_trunk(app=None, client=None):
+    from wazo_router_calld.database import SessionLocal
+    from wazo_router_calld.models.carrier_trunk import CarrierTrunk
+
+    session = SessionLocal(bind=app.engine)
+    session.add(
+        CarrierTrunk(
+            name='carrier_trunk1',
+            carrier_id=1,
+            sip_proxy='proxy.somedomain.com',
+            auth_username='username1',
+            auth_password='password1',
+        )
+    )
+    session.commit()
+    #
+    response = client.delete("/carrier_trunks/1")
+    assert response.status_code == 200
+    assert response.json() == {
+        'id': 1,
+        'name': 'carrier_trunk1',
+        'carrier_id': 1,
+        'sip_proxy': 'proxy.somedomain.com',
+        'auth_username': 'username1',
+        'auth_password': 'password1',
+        'auth_ha1': None,
+        'expire_seconds': 3600,
+        'retry_seconds': 30,
+        'from_domain': None,
+        'realm': None,
+        'registered': False,
+        'registrar_proxy': None,
+    }
+
+
+@get_app_and_client
+def test_delete_carrier_trunk_not_found(app=None, client=None):
+    response = client.delete("/carrier_trunks/1")
+    assert response.status_code == 404

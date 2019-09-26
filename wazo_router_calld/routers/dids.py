@@ -39,3 +39,11 @@ def update_carrier(did_id: int, did: schema.DIDUpdate, db: Session = Depends(get
     if db_did is None:
         raise HTTPException(status_code=404, detail="DID not found")
     return db_did
+
+
+@router.delete("/dids/{did_id}", response_model=schema.DID)
+def delete_carrier(did_id: int, db: Session = Depends(get_db)):
+    db_did = service.delete_did(db, did_id=did_id)
+    if db_did is None:
+        raise HTTPException(status_code=404, detail="DID not found")
+    return db_did

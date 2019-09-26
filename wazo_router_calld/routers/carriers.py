@@ -41,3 +41,11 @@ def update_carrier(
     if db_carrier is None:
         raise HTTPException(status_code=404, detail="Carrier not found")
     return db_carrier
+
+
+@router.delete("/carriers/{carrier_id}", response_model=schema.Carrier)
+def delete_carrier(carrier_id: int, db: Session = Depends(get_db)):
+    db_carrier = service.delete_carrier(db, carrier_id=carrier_id)
+    if db_carrier is None:
+        raise HTTPException(status_code=404, detail="Carrier not found")
+    return db_carrier

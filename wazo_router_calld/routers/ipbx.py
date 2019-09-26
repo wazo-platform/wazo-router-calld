@@ -38,3 +38,11 @@ def update_carrier(
     if db_ipbx is None:
         raise HTTPException(status_code=404, detail="IPBX not found")
     return db_ipbx
+
+
+@router.delete("/ipbx/{ipbx_id}", response_model=schema.IPBX)
+def delete_carrier(ipbx_id: int, db: Session = Depends(get_db)):
+    db_ipbx = service.delete_ipbx(db, ipbx_id=ipbx_id)
+    if db_ipbx is None:
+        raise HTTPException(status_code=404, detail="IPBX not found")
+    return db_ipbx

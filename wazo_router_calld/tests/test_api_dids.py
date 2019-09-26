@@ -148,3 +148,34 @@ def test_update_did_not_found(app=None, client=None):
         },
     )
     assert response.status_code == 404
+
+
+@get_app_and_client
+def test_delete_did(app=None, client=None):
+    from wazo_router_calld.database import SessionLocal
+    from wazo_router_calld.models.did import DID
+
+    session = SessionLocal(bind=app.engine)
+    session.add(
+        DID(
+            did_regex=r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
+            carrier_trunk_id=1,
+            tenant_id=1,
+        )
+    )
+    session.commit()
+    #
+    response = client.delete("/dids/1")
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": 1,
+        "did_regex": r"^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$",
+        "carrier_trunk_id": 1,
+        "tenant_id": 1,
+    }
+
+
+@get_app_and_client
+def test_delete_did_not_found(app=None, client=None):
+    response = client.delete("/dids/1")
+    assert response.status_code == 404

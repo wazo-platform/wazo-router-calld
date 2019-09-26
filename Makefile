@@ -25,11 +25,11 @@ flake8:
 
 .PHONY: pylint
 pylint:
-	pylint wazo_router_calld
+	pylint --disable=E501,W503,W0612,W0613,E402,E701 wazo_router_calld
 
 .PHONY: pycodestyle
 pycodestyle:
-	pycodestyle --ignore=E501,W503,E402,E701 wazo_router_calld
+	pycodestyle --ignore=E501,W503,W0612,W0613,E402,E701 wazo_router_calld
 
 .PHONY: test
 test:

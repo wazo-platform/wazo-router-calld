@@ -49,3 +49,13 @@ def update_carrier_trunk(
     if db_carrier_trunk is None:
         raise HTTPException(status_code=404, detail="Carrier Trunk not found")
     return db_carrier_trunk
+
+
+@router.delete("/carrier_trunks/{carrier_trunk_id}", response_model=schema.CarrierTrunk)
+def delete_carrier_trunk(carrier_trunk_id: int, db: Session = Depends(get_db)):
+    db_carrier_trunk = service.delete_carrier_trunk(
+        db, carrier_trunk_id=carrier_trunk_id
+    )
+    if db_carrier_trunk is None:
+        raise HTTPException(status_code=404, detail="Carrier Trunk not found")
+    return db_carrier_trunk

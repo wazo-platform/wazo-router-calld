@@ -41,3 +41,11 @@ def update_domain(
     if db_domain is None:
         raise HTTPException(status_code=404, detail="Domain not found")
     return db_domain
+
+
+@router.delete("/domains/{domain_id}", response_model=schema.Domain)
+def delete_domain(domain_id: int, db: Session = Depends(get_db)):
+    db_domain = service.delete_domain(db, domain_id=domain_id)
+    if db_domain is None:
+        raise HTTPException(status_code=404, detail="Domain not found")
+    return db_domain

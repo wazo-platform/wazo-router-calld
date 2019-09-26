@@ -141,3 +141,38 @@ def test_update_routing_rule_not_found(app=None, client=None):
         },
     )
     assert response.status_code == 404
+
+
+@get_app_and_client
+def test_delete_routing_rule(app=None, client=None):
+    from wazo_router_calld.database import SessionLocal
+    from wazo_router_calld.models.routing_rule import RoutingRule
+
+    session = SessionLocal(bind=app.engine)
+    session.add(
+        RoutingRule(
+            prefix="39",
+            carrier_trunk_id=1,
+            ipbx_id=1,
+            did_regex=r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
+            route_type="pstn",
+        )
+    )
+    session.commit()
+    #
+    response = client.delete("/routing_rules/1")
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": 1,
+        "prefix": "39",
+        "carrier_trunk_id": 1,
+        "ipbx_id": 1,
+        "did_regex": r'^(\+?1)?(8(00|44|55|66|77|88)[2-9]\d{6})$',
+        "route_type": "pstn",
+    }
+
+
+@get_app_and_client
+def test_delete_routing_rule_not_found(app=None, client=None):
+    response = client.delete("/routing_rules/1")
+    assert response.status_code == 404

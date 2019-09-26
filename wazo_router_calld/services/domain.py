@@ -1,22 +1,26 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from wazo_router_calld.models.domain import Domain
 from wazo_router_calld.schemas import domain as schema
 
 
-def get_domain_by_id(db: Session, domain_id: int):
+def get_domain_by_id(db: Session, domain_id: int) -> Domain:
     return db.query(Domain).filter(Domain.id == domain_id).first()
 
 
-def get_domain(db: Session, domain: str):
+def get_domain(db: Session, domain: str) -> Domain:
     return db.query(Domain).filter(Domain.domain == domain).first()
 
 
-def get_domains(db: Session, skip: int = 0, limit: int = 100):
+def get_domains(db: Session, skip: int = 0, limit: int = 100) -> List[Domain]:
     return db.query(Domain).offset(skip).limit(limit).all()
 
 
-def get_domains_by_tenant(db: Session, tenant_id: int, skip: int = 0, limit: int = 100):
+def get_domains_by_tenant(
+    db: Session, tenant_id: int, skip: int = 0, limit: int = 100
+) -> List[Domain]:
     return (
         db.query(Domain)
         .filter(Domain.tenant_id == tenant_id)
@@ -26,7 +30,7 @@ def get_domains_by_tenant(db: Session, tenant_id: int, skip: int = 0, limit: int
     )
 
 
-def create_domain(db: Session, domain: schema.DomainCreate):
+def create_domain(db: Session, domain: schema.DomainCreate) -> Domain:
     db_domain = Domain(domain=domain.domain, tenant_id=domain.tenant_id)
     db.add(db_domain)
     db.commit()
@@ -34,7 +38,7 @@ def create_domain(db: Session, domain: schema.DomainCreate):
     return db_domain
 
 
-def update_domain(db: Session, domain_id: int, domain: schema.DomainUpdate):
+def update_domain(db: Session, domain_id: int, domain: schema.DomainUpdate) -> Domain:
     db_domain = db.query(Domain).filter(Domain.id == domain_id).first()
     if db_domain is not None:
         db_domain.domain = (
@@ -45,4 +49,12 @@ def update_domain(db: Session, domain_id: int, domain: schema.DomainUpdate):
         )
         db.commit()
         db.refresh(db_domain)
+    return db_domain
+
+
+def delete_domain(db: Session, domain_id: int) -> Domain:
+    db_domain = db.query(Domain).filter(Domain.id == domain_id).first()
+    if db_domain is not None:
+        db.delete(db_domain)
+        db.commit()
     return db_domain

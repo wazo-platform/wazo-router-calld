@@ -44,3 +44,11 @@ def update_routing_rule(
     if db_routing_rule is None:
         raise HTTPException(status_code=404, detail="RoutingRule not found")
     return db_routing_rule
+
+
+@router.delete("/routing_rules/{routing_rule_id}", response_model=schema.RoutingRule)
+def delete_routing_rule(routing_rule_id: int, db: Session = Depends(get_db)):
+    db_routing_rule = service.delete_routing_rule(db, routing_rule_id=routing_rule_id)
+    if db_routing_rule is None:
+        raise HTTPException(status_code=404, detail="RoutingRule not found")
+    return db_routing_rule
