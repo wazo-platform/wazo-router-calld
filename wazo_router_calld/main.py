@@ -1,26 +1,13 @@
+from multiprocessing import Process
 from typing import Optional
 
 import click
-import uvicorn  # type: ignore
+import signal
 
-from .app import get_app
+from .consul import setup_consul
 
 
 @click.command()
-@click.option(
-    "--host",
-    type=str,
-    default="127.0.0.1",
-    help="Bind socket to this host.",
-    show_default=True,
-)
-@click.option(
-    "--port",
-    type=int,
-    default=8000,
-    help="Bind socket to this port.",
-    show_default=True,
-)
 @click.option(
     "--consul-uri",
     type=str,
@@ -29,38 +16,44 @@ from .app import get_app
     show_default=True,
 )
 @click.option(
-    "--database-uri",
-    type=str,
-    default="postgresql://wazo:wazo@localhost/wazo",
-    help="SQLAlchemy database URI, overwrites the configuration obtained from the Consul agent",
+    "--messagebus-uri",
+    type=click.STRING,
+    default="pyamqp://wazo:wazo@localhost:5672//",
     show_default=True,
 )
+@click.option("-w", "--workers", type=click.INT, default=1, show_default=True)
 @click.option(
-    "--debug", is_flag=True, default=False, help="Enable debug mode.", hidden=True
+    "-d", "--debug", is_flag=True, default=False, help="Enable debug mode.", hidden=True
 )
 def main(
-    host: Optional[str] = None,
-    port: Optional[int] = None,
     consul_uri: Optional[str] = None,
-    database_uri: Optional[str] = None,
+    messagebus_uri: Optional[str] = None,
+    workers: int = 1,
     debug: bool = False,
 ):
-    config = dict(
-        host=host,
-        port=port,
-        consul_uri=consul_uri,
-        database_uri=database_uri,
-        debug=debug,
-    )
-    app = get_app(config)
-    log_level = "info" if not config['debug'] else "debug"
-    uvicorn.run(
-        app,
-        host=config['host'],
-        port=config['port'],
-        log_level=log_level,
-        reload=config['debug'],
-    )
+    config = dict(consul_uri=consul_uri, messagebus_uri=messagebus_uri, debug=debug)
+    if consul_uri is not None:
+        setup_consul(config)
+
+    # worker constructor
+    def _worker():
+        from .worker import WazoRouterCalld
+
+        worker = WazoRouterCalld(config)
+        worker.run()
+
+    # start the workers as processes
+    processes = []
+    for n in range(workers):
+        process = Process(target=_worker)
+        process.start()
+        processes.append(process)
+    # ignore SIGINT & SIGTERM signals in the main process
+    signal.signal(signal.SIGINT, lambda signum, frame: None)
+    signal.signal(signal.SIGTERM, lambda signum, frame: None)
+    # wait the subprocesses to terminate
+    for process in processes:
+        process.join()
 
 
 def main_with_env():

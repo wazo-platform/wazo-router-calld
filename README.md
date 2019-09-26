@@ -1,6 +1,6 @@
 # wazo-router-calld
 
-wazo-router-calld provides REST API for the C4 infrastructure.
+wazo-router-calld provides call management services for the C4 infrastructure.
 
 ## Installing wazo-router-calld
 

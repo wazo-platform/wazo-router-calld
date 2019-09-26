@@ -1,12 +1,9 @@
 from typing import Optional
 
 from urllib.parse import urlparse
-from uuid import uuid4
 from typing import Tuple
 
 from consul import Consul  # type: ignore
-from fastapi import FastAPI
-from pydantic import NoneBytes
 
 
 class ConsulService(object):
@@ -36,7 +33,7 @@ class ConsulService(object):
     def deregister(self, service_id: str):
         self._consul.agent.service.deregister(service_id)
 
-    def get(self, key: str) -> NoneBytes:
+    def get(self, key: str) -> Optional[str]:
         index, data = self._consul.kv.get(key)
         return data['Value'] if data else None
 
@@ -44,46 +41,12 @@ class ConsulService(object):
         return self._consul.kv.put(key, value)
 
 
-def setup_consul(app: FastAPI, config: dict):
+def setup_consul(config: dict):
     consul = ConsulService(config['consul_uri'])
-    setattr(app, 'consul', consul)
 
     # configuration settings from consul
-    database_uri = consul.get('wazo-router-calld.database_uri')
-    if database_uri is not None:
-        config['database_uri'] = database_uri.decode('utf-8')
+    messagebus_uri = consul.get('wazo-router-calld.messagebus_uri')
+    if messagebus_uri is not None:
+        config['messagebus_uri'] = messagebus_uri
 
-    # register the API HTTP service on consul
-    service_id = 'wazo-router-calld-%s' % uuid4()
-
-    @app.get('/status')
-    async def health():
-        return {"status": "ok"}
-
-    @app.on_event("startup")
-    def startup_event():
-        consul = getattr(app, 'consul')
-        consul.register(
-            service_id,
-            'wazo-router-calld',
-            address=config['host'] if config['host'] != '0.0.0.0' else None,
-            port=config['port'],
-            tags=('wazo-router-calld', 'wazo-router', 'wazo-api', 'wazo'),
-            check={
-                "id": "api",
-                "name": "HTTP API on port 5000",
-                "http": "http://%(host)s:%(port)d/status" % config,
-                "method": "GET",
-                "interval": "10s",
-                "timeout": "1s",
-            }
-            if (config['host'] and config['port'])
-            else None,
-        )
-
-    @app.on_event("shutdown")
-    def shutdown_event():
-        consul = getattr(app, 'consul')
-        consul.deregister(service_id)
-
-    return app
+    return config

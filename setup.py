@@ -24,12 +24,9 @@ setup(
     url='http://www.wazo-platform.org/',
     install_requires=[
         'Click>=7.0',
-        'fastapi>=0.38.0',
+        'kombu>=4.6.4',
         'python-consul>=1.1.0',
-        'psycopg2-binary>=2.8.0',
         'requests>=2.22.0',
-        'SQLAlchemy>=1.3.0',
-        'uvicorn>=0.9.0',
     ],
     packages=find_packages(),
     classifiers=[
