@@ -16,6 +16,9 @@ from .consul import setup_consul
     show_default=True,
 )
 @click.option(
+    "--api-uri", type=click.STRING, default="http://localhost:8000/", show_default=True
+)
+@click.option(
     "--messagebus-uri",
     type=click.STRING,
     default="pyamqp://wazo:wazo@localhost:5672//",
@@ -27,11 +30,17 @@ from .consul import setup_consul
 )
 def main(
     consul_uri: Optional[str] = None,
+    api_uri: Optional[str] = None,
     messagebus_uri: Optional[str] = None,
     workers: int = 1,
     debug: bool = False,
 ):
-    config = dict(consul_uri=consul_uri, messagebus_uri=messagebus_uri, debug=debug)
+    config = dict(
+        consul_uri=consul_uri,
+        api_uri=api_uri,
+        messagebus_uri=messagebus_uri,
+        debug=debug,
+    )
     if consul_uri is not None:
         setup_consul(config)
 

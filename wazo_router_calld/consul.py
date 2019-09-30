@@ -43,10 +43,10 @@ class ConsulService(object):
 
 def setup_consul(config: dict):
     consul = ConsulService(config['consul_uri'])
-
     # configuration settings from consul
-    messagebus_uri = consul.get('wazo-router-calld.messagebus_uri')
-    if messagebus_uri is not None:
-        config['messagebus_uri'] = messagebus_uri
+    for k in ('api_uri', 'messagebus_uri'):
+        conf_value = consul.get('wazo-router-calld.%s' % k)
+        if conf_value is not None:
+            config[k] = conf_value
 
     return config

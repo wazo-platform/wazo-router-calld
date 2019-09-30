@@ -4,8 +4,11 @@ import os
 import signal
 import sys
 
+from typing import Optional
+
+from .services.api import APIService
 from .services.messagebus import MessageBusService
-from .const import QUEUE_NAME
+from .const import QUEUE_NAME, METHOD_NAME
 
 
 class WazoRouterCalld(object):
@@ -19,12 +22,13 @@ class WazoRouterCalld(object):
 
     def __init__(
         self,
-        context: dict = None,
-        messagebus: MessageBusService = None,
+        context: Optional[dict] = None,
+        messagebus: Optional[MessageBusService] = None,
         signals: bool = True,
     ):
         self._context = context or {}
         self._setup_logging(self._context)
+        self._api = APIService(uri=self._context['api_uri'], logger=self._logger)
         self._messagebus = (
             messagebus
             if messagebus is not None
@@ -32,10 +36,9 @@ class WazoRouterCalld(object):
                 uri=self._context["messagebus_uri"], logger=self._logger
             )
         )
-        signals and (
-            signal.signal(signal.SIGINT, self._graceful_exit),
-            signal.signal(signal.SIGTERM, self._graceful_exit),
-        )
+        if signals:
+            signal.signal(signal.SIGINT, self._graceful_exit)
+            signal.signal(signal.SIGTERM, self._graceful_exit)
 
     def _graceful_exit(self, signum=None, frame=None):  # pragma: no cover
         self.stop()
@@ -59,7 +62,18 @@ class WazoRouterCalld(object):
     def callback(self, body, message):
         try:
             self._logger.debug("{}".format(json.dumps(body)))
+            method_name = body.get("method")
+            method = {METHOD_NAME.STORE_CDR.value: self._store_cdr}.get(method_name)
+            if method is not None:
+                method(
+                    params=body.get("params") or {},
+                    correlation_id=message.properties.get("correlation_id"),
+                    reply_to=message.properties.get("reply_to"),
+                )
         except Exception:  # pragma: no cover
             self._logger.exception("{}".format(json.dumps(body)))
         finally:
             message.ack()
+
+    def _store_cdr(self, params: dict, correlation_id: str, reply_to: str):
+        self._api.post_cdr(params['cdr'])
