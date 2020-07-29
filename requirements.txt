@@ -45,7 +45,7 @@ tox==3.14.0
 typed-ast==1.4.0
 typing-extensions==3.7.4
 urllib3==1.25.3
-uvicorn==0.9.0
+uvicorn==0.11.7
 uvloop==0.13.0
 virtualenv==16.7.5
 wcwidth==0.1.7
