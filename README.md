@@ -13,7 +13,7 @@ further details on installing one.
 ### Running unit tests
 
 ```
-$ tox --recreate -e py37
+tox --recreate -e py37
 ```
 
 ## Docker
