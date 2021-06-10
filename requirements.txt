@@ -10,7 +10,7 @@ coverage==4.5.4
 dnspython==1.16.0
 email-validator==1.0.4
 entrypoints==0.3
-fastapi==0.38.1
+fastapi==0.65.2
 filelock==3.0.12
 flake8==3.7.8
 flake8-colors==0.1.6
